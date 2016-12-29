@@ -1,17 +1,17 @@
-(function(){
+(function () {
     "use strict";
 
     var RenderUrlsToFile, system, url;
 
     system = require("system");
 
-    RenderUrlsToFile = function(url, callbackPerQuestion, callbackFinal) {
+    RenderUrlsToFile = function (url, callbackPerQuestion, callbackFinal) {
         var getFilename, next, pdfGeneration, retrieve, waitFor, doTakeScreenshot, takeScreenshot, waitForLoading;
         var page = require('webpage').create();
         var args = system.args;
-        if (args.length > 0 ){
+        if (args.length > 0) {
             console.log("yeah");
-            args.forEach(function(arg, i) {
+            args.forEach(function (arg, i) {
                 console.log(i + ': ' + arg);
             });
         } else {
@@ -41,7 +41,7 @@
 
         page.paperSize = { format: 'A4', orientation: 'portrait', margin: '1cm',
                           header: {
-                              height: "1cm",
+                              height:"1cm",
                               contents: phantom.callback(function(pageNum, numPages) {
                                   return "<h3>Header <span style='float:right'>" + pageNum + " / " + numPages + "</span></h3>";
                               })
@@ -65,7 +65,7 @@
                     var file;
 
                     //hiding footer, header
-                    page.includeJs('https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js', function(){
+                    page.includeJs('https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js', function() {
                         page.evaluate(function() {
                             console.log('INFO: hiding footer, header....');
                             jQuery('header[class^=header__header___]').hide();
@@ -103,7 +103,7 @@
                         console.log('INFO: phantomjs pdf generation took ' + ((new Date()).getTime() - startTime) + 'ms\n');
                         console.log('---------');
                         return next(status, file);
-                    }
+                    };
 
                     takeScreenshot = function(file) {
                         //here we define how long we should wait for a question to be rendered
@@ -114,11 +114,11 @@
                         if (hasGeoGebra) {
                             console.log('INFO: geogebra - it will take a little bit more time to do rendering');
                             //TODO should use a wait function instead of just setting the timeout
-                            window.setTimeout(function () {doTakeScreenshot(file)}, 3500);
+                            window.setTimeout(function () {doTakeScreenshot(file);}, 3500);
                         } else {
                             console.log("no geogebra?");
                             //TODO should use a wait function instead of just setting the timeout
-                            window.setTimeout(function () {doTakeScreenshot(file)}, renderDelay);
+                            window.setTimeout(function () {doTakeScreenshot(file);}, renderDelay);
                         }
                     };
 
@@ -131,14 +131,14 @@
                         //here we decide how long we should wait for questionset to be loaded,
                         //before we take the first snapshot and navigate to the next question
                         page.evaluate(function() {
-                            if (document.querySelector('div[class^=PDFPanelDisplay__PDFPanel_]') != null) {
+                            if (document.querySelector('div[class^=PDFPanelDisplay__PDFPanel_]') !== null) {
                                 console.log('INFO: hiding pdfviewer');
                                 jQuery('div[class^=PDFPanelDisplay__PDFPanel_]').hide();
                             }
                         });
 
                         var hasIllustration = page.evaluate(function () {
-                            return document.querySelector('#illustration') != null;
+                            return document.querySelector('#illustration') !== null;
                         });
 
                         var hasPdf = page.evaluate(function() {
@@ -151,7 +151,7 @@
                             page.evaluate(function() {
                                 jQuery('div[class^=PDFPanelDisplay__PDFPanel_]').hide();
                             });
-                        };
+                        }
 
                         var hasGeoGebra = page.evaluate(function() {
                             return document.querySelector('div[id^=ggbObject_]');
@@ -182,7 +182,7 @@
                     return callbackFinal();
                 }
             });
-        }
+        };
         return retrieve();
     };
 
